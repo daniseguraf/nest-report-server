@@ -1,19 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import PdfPrinter from 'pdfmake';
+import { GeneratePdfService } from 'src/generate-pdf/generate-pdf.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-const fonts = {
-  Roboto: {
-    normal: 'fonts/Roboto-Regular.ttf',
-    bold: 'fonts/Roboto-Medium.ttf',
-    italics: 'fonts/Roboto-Italic.ttf',
-    bolditalics: '/fonts/Roboto-MediumItalic.ttf',
-  },
-};
+import { getEmploymentLetterdReport } from 'src/reports/employment-letter.report';
+import { getHelloWorldReport } from 'src/reports/hello-world.report';
 
 @Injectable()
 export class BasicReportsService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly generatePdfService: GeneratePdfService,
+  ) {}
 
   async getEmployeeById() {
     try {
@@ -28,11 +24,15 @@ export class BasicReportsService {
   }
 
   getPdf() {
-    const printer = new PdfPrinter(fonts);
-    const docDefinition = {
-      content: ['Hola Mundo'],
-    };
+    const content = getHelloWorldReport();
+    const pdfDoc = this.generatePdfService.getPdf(content);
 
-    return printer.createPdfKitDocument(docDefinition);
+    return pdfDoc;
+  }
+
+  getEmploymentLetter() {
+    const docDefinition = getEmploymentLetterdReport();
+
+    return this.generatePdfService.getPdf(docDefinition);
   }
 }
