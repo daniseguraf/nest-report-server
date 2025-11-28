@@ -9,24 +9,49 @@ export type Header = {
 };
 
 export const header = (props: Header): Content => {
-  const { showLogo = true, showDate = true } = props;
+  const { showLogo = true, showDate = true, title, subTitle } = props;
 
   const logo: Content = showLogo
     ? {
         image: 'src/assets/tucan-code-logo.png',
-        alignment: 'left',
         width: 80,
         height: 80,
       }
     : '';
 
-  const date: Content = {
-    text: showDate ? dateFormatter(new Date()) : '',
-    alignment: 'right',
-    style: 'date',
+  const date: Content = showDate
+    ? {
+        text: dateFormatter(new Date()),
+        alignment: 'right',
+      }
+    : '';
+
+  const headerTitle = title
+    ? {
+        text: title,
+        style: {
+          bold: true,
+          fontSize: 24,
+        },
+      }
+    : '';
+
+  const headerSubtitle = subTitle
+    ? {
+        text: subTitle,
+        style: {
+          bold: true,
+          fontSize: 16,
+        },
+      }
+    : '';
+
+  const headerStack = {
+    stack: [headerTitle, headerSubtitle],
+    width: '*',
   };
 
   return {
-    columns: [logo, date],
+    columns: [logo, headerStack, date],
   };
 };

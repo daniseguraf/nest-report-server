@@ -1,5 +1,17 @@
 import { StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { header } from './components/header';
+import { dateFormatter } from 'src/helpers/dateFormater';
+
+export type Employee = {
+  employeeName: string;
+  employeePosition: string;
+  employerName: string;
+  employerPosition: string;
+  employeeStartDate: string;
+  employeeWorkingHours: number;
+  employeeWorkSchedule: string;
+  employerCompany: string;
+};
 
 const styles: StyleDictionary = {
   title: {
@@ -31,25 +43,38 @@ const styles: StyleDictionary = {
   },
 };
 
-export const getEmploymentLetterdReport = (): TDocumentDefinitions => {
+export const getEmploymentLetterdReport = (
+  employee: Employee,
+): TDocumentDefinitions => {
+  const {
+    employeeName,
+    employeePosition,
+    employerName,
+    employerPosition,
+    employeeStartDate,
+    employeeWorkingHours,
+    employeeWorkSchedule,
+    employerCompany,
+  } = employee;
+
   const docDefinition: TDocumentDefinitions = {
     styles,
-    header: header({ showLogo: false, showDate: false }),
+    header: header({}),
     content: [
       {
         text: 'CONSTANCIA DE EMPLEO',
         style: 'title',
       },
       {
-        text: `Yo, [Nombre del Empleador], en mi calidad de [Cargo del Empleador] de [Nombre de la Empresa], por medio de la presente certifico que [Nombre del Empleado] ha sido empleado en nuestra empresa desde el [Fecha de Inicio del Empleado].`,
+        text: `Yo, ${employerName}, en mi calidad de ${employerPosition} de ${employerCompany}, por medio de la presente certifico que ${employeeName} ha sido empleado en nuestra empresa desde el ${employeeStartDate}.`,
         style: 'p',
       },
       {
-        text: `Durante su empleo, el Sr./Sra. [Nombre del Empleado] ha desempeñado el cargo de [Cargo del Empleado], demostrando responsabilidad, compromiso y habilidades profesionales en sus labores.`,
+        text: `Durante su empleo, el Sr./Sra. ${employeeName} ha desempeñado el cargo de ${employeePosition}, demostrando responsabilidad, compromiso y habilidades profesionales en sus labores.`,
         style: 'p',
       },
       {
-        text: `La jornada laboral del Sr./ Sra. [Nombre del Empleado] es de [Número de Horas] horas semanales, con un horario de [Horario de Trabajo], cumpliendo con las políticas y procedimientos establecidos por la empresa.`,
+        text: `La jornada laboral del Sr./ Sra. ${employeeName} es de ${employeeWorkingHours} horas semanales, con un horario de ${employeeWorkSchedule}, cumpliendo con las políticas y procedimientos establecidos por la empresa.`,
         style: 'p',
       },
       {
@@ -61,19 +86,19 @@ export const getEmploymentLetterdReport = (): TDocumentDefinitions => {
         style: 'userInfo',
       },
       {
-        text: `[Nombre del Empleador]`,
+        text: employerName,
         style: 'userInfo',
       },
       {
-        text: `[Cargo del Empleador]`,
+        text: employerPosition,
         style: 'userInfo',
       },
       {
-        text: `[Nombre de la Empresa]`,
+        text: employerCompany,
         style: 'userInfo',
       },
       {
-        text: `[Fecha de Emisión]`,
+        text: dateFormatter(new Date()),
         style: 'userInfo',
       },
     ],
